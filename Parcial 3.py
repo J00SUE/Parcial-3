@@ -41,25 +41,41 @@ class Dicom():
     
     def Nifti(self, ruta, rutan):
         dicom2nifti.convert_directory(ruta,rutan)
-        img1 = nilearn.image.load_img(rutan)
-        plotting.plot_anat(img1[0])
+        rut = input("Ruta archivo nifti: ")
+        a = input("Tiempo de espera") 
+        img = nilearn.image.load_img(rut)
+        plotting.plot_anat(img)
+        plt.show()
     
 D = Dicom()
-ruta = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\Sarcoma\img1"
+ruta = input("Ruta de Dicom: ")
 A = D.Imagen(ruta)
-N = D.Nombre(A,0)
+P = int(input("Paciente: "))
+N = D.Nombre(A,P)
 print('Nombre: {}' .format(N))
-I = D.Id(A,0)
+I = D.Id(A,P)
 print('Id: {}' .format(I))
-E = D.Age(A,0)
+E = D.Age(A,P)
 print('Edad: {}' .format(E))
-p = D.Estudio(A,0)
+p = D.Estudio(A,P)
 print('Estudio: {}' .format(p))
-k = D.Sex(A,0)
+k = D.Sex(A,P)
 print('Genero: {}' .format(k))
-z = D.Im(A,0)
+z = D.Im(A,P)
 rutan = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\nifti"
 s = D.Nifti(ruta,rutan)
+
+paciente = {}
+paciente[I] = {
+    'Nombre': N,
+    'Edad': E,
+    'Estudio': p,
+    'Genero': k,
+    'Imagen' : z,
+    'Nifti' : s
+}
+
+
 
 
 
