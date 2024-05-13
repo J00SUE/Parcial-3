@@ -35,16 +35,33 @@ class Dicom():
         Estudio = Lista[i].StudyDescription
         return Estudio
     
+    def Im(self, Lista,i):
+        Im = Lista[i]
+        return Im
+    
+    def Nifti(self, ruta, rutan):
+        dicom2nifti.convert_directory(ruta,rutan)
+        img1 = nilearn.image.load_img(rutan)
+        plotting.plot_anat(img1[0])
+    
 D = Dicom()
 ruta = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\Sarcoma\img1"
 A = D.Imagen(ruta)
 N = D.Nombre(A,0)
 print('Nombre: {}' .format(N))
+I = D.Id(A,0)
+print('Id: {}' .format(I))
 E = D.Age(A,0)
 print('Edad: {}' .format(E))
 p = D.Estudio(A,0)
 print('Estudio: {}' .format(p))
 k = D.Sex(A,0)
 print('Genero: {}' .format(k))
+z = D.Im(A,0)
+rutan = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\nifti"
+s = D.Nifti(ruta,rutan)
+
+
+
 
 
