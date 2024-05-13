@@ -8,7 +8,7 @@ import dicom2nifti
 import nilearn
 from nilearn import plotting
      
-class Dicom():
+class Paciente():
     def __init__(self):
         self.dicomlist= []
 
@@ -119,7 +119,8 @@ class Imagenes:
         else:
             print("No se encontró la imagen especificada en el diccionario.")
     
-D = Dicom()
+D = Paciente()
+P = 0
 
 ruta = input("Ruta de Dicom: ")
 A = D.Imagen(ruta)
@@ -147,7 +148,6 @@ paciente[I] = {
     'Imagen' : z,
     'Nifti' : s
 }
-
 
 ruta = input("Ruta de Dicom: ")
 A = D.Imagen(ruta)
