@@ -1,43 +1,48 @@
 import numpy as np 
 import pydicom
 import matplotlib.pyplot as plt
+import cv2
+import numpy as np
 import os
 import dicom2nifti
 import nilearn
 from nilearn import plotting
      
 class Dicom():
+    def __init__(self):
+        self.dicomlist= []
+
     def Imagen(self, path):
-        Imagen_list = []
         for archivo in os.listdir(path):
             if archivo.endswith('.dcm'):
-                Imagen_list.append(pydicom.dcmread(os.path.join(path, archivo)))
-        Imagen_list.sort(key = lambda x: int(x.ImagePositionPatient[2]))
-        return Imagen_list
+                self.dicomlist.append(pydicom.dcmread(os.path.join(path, archivo)))
+                self.dicomlist.sort(key = lambda x: int(x.ImagePositionPatient[2]))
+        return self.dicomlist
 
-    def Nombre(self, Lista,i):
-        Nombre = Lista[i].PatientName
+    def Nombre(self,i):
+        Nombre = self.dicomlist[i].PatientName
         return Nombre
 
-    def Age(self, Lista,i):
-        Edad = Lista[i].PatientAge
+    def Age(self,i):
+        Edad = self.dicomlist[i].PatientAge
         return Edad
 
-    def Id(self, Lista,i):
-        Id = Lista[i].PatientID
+    def Id(self,i):
+        Id = self.dicomlist[i].PatientID
         return Id
     
-    def Sex(self, Lista,i):
-        Sex = Lista[i].PatientSex
+    def Sex(self,i):
+        Sex = self.dicomlist[i].PatientSex
         return Sex
 
-    def Estudio(self, Lista,i):
-        Estudio = Lista[i].StudyDescription
+    def Estudio(self,i):
+        Estudio = self.dicomlist[i].StudyDescription
         return Estudio
     
-    def Im(self, Lista,i):
-        Im = Lista[i]
-        return Im
+    def retornar_imagen(self,i):
+        z = self.dicomlist[i]
+        img = z.pixel_array
+        return img
     
     def Nifti(self, ruta, rutan):
         dicom2nifti.convert_directory(ruta,rutan)
@@ -47,21 +52,87 @@ class Dicom():
         plotting.plot_anat(img)
         plt.show()
     
+class Imagenes:
+    def __init__(self):
+        self.imagenesorg = {}
+        self.imagenesrto = {}
+        self.imagenesbin = {}
+        self.umbral = 128  
+        self.tamano_kernel = 3
+
+    def leer_imagen(self, key, iman):
+        imn=[]
+        for i in range (len(iman)):
+            imagen = iman[i].pixel_array
+            img = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
+            imn.append(img)
+        if imn is not None:
+            self.imagenesorg[key] = img
+            print("Imagen leída correctamente.")
+        else:
+            print("No se pudo leer la imagen desde la ruta especificada.")
+    def obtener_imagen(self, key,i):
+        if key in self.imagenesorg:
+            return self.imagenesorg[key][i]
+        else:
+            print("No se encontró la imagen especificada en el diccionario.")
+            return None
+
+    def rotar_imagen(self, key, angulo,i):
+        if key in self.imagenes:
+            if angulo == 1:
+                imagen_rotada = cv2.rotate(self.imagenesorc[key][i], cv2.ROTATE_90_CLOCKWISE)
+            elif angulo == 2:
+                imagen_rotada = cv2.rotate(self.imagenesorc[key][i], cv2.ROTATE_180)
+            elif angulo == 3:
+                imagen_rotada = cv2.rotate(self.imagenesorc[key][i], cv2.ROTATE_90_COUNTERCLOCKWISE)
+            else:
+                print("El ángulo especificado no es válido.")
+                return None
+                
+            self.imagenesrto[key] = imagen_rotada
+            print("Imagen rotada correctamente.")
+            return imagen_rotada
+        else:
+            print("No se encontró la imagen especificada en el diccionario.")
+            return None
+
+    def binarizar_imagen(self, key,i, umbral=None ,  tamano_kernel=None):
+        if tamano_kernel is not None:
+            self.tamano_kernel = tamano_kernel
+        if umbral is not None:
+            self.umbral = umbral
+
+        if key in self.imagenes:
+            imagen_gris = cv2.cvtColor(self.imagenesorc[key][i], cv2.COLOR_BGR2GRAY)
+            _, imagen_binarizada = cv2.threshold(imagen_gris, self.umbral, 255, cv2.THRESH_BINARY)
+            kernel = np.ones((self.tamano_kernel, self.tamano_kernel), np.uint8)
+            imagen_morfologica = cv2.morphologyEx(imagen_binarizada, cv2.MORPH_OPEN, kernel)
+            info = f"Imagen binarizada (Umbral: {self.umbral},  kernel: {self.tamano_kernel})"
+            cv2.putText(imagen_morfologica, info, (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            self.imagenesbin[key] = imagen_morfologica
+            print("Imagen binarizada y transformación morfológica aplicadas correctamente.")
+            return imagen_morfologica
+            
+        else:
+            print("No se encontró la imagen especificada en el diccionario.")
+    
 D = Dicom()
+
 ruta = input("Ruta de Dicom: ")
 A = D.Imagen(ruta)
-P = int(input("Paciente: "))
-N = D.Nombre(A,P)
+P = 0
+N = D.Nombre(P)
 print('Nombre: {}' .format(N))
-I = D.Id(A,P)
+I = D.Id(P)
 print('Id: {}' .format(I))
-E = D.Age(A,P)
+E = D.Age(P)
 print('Edad: {}' .format(E))
-p = D.Estudio(A,P)
+p = D.Estudio(P)
 print('Estudio: {}' .format(p))
-k = D.Sex(A,P)
+k = D.Sex(P)
 print('Genero: {}' .format(k))
-z = D.Im(A,P)
+z = D.retornar_imagen(P)
 rutan = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\nifti"
 s = D.Nifti(ruta,rutan)
 
@@ -76,8 +147,60 @@ paciente[I] = {
 }
 
 
+ruta = input("Ruta de Dicom: ")
+A = D.Imagen(ruta)
+P = 0
+N = D.Nombre(P)
+print('Nombre: {}' .format(N))
+I = D.Id(P)
+print('Id: {}' .format(I))
+E = D.Age(P)
+print('Edad: {}' .format(E))
+p = D.Estudio(P)
+print('Estudio: {}' .format(p))
+k = D.Sex(P)
+print('Genero: {}' .format(k))
+z = D.retornar_imagen(P)
+rutan = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\nifti"
+s = D.Nifti(ruta,rutan)
 
+paciente = {}
+paciente[I] = {
+    'Nombre': N,
+    'Edad': E,
+    'Estudio': p,
+    'Genero': k,
+    'Imagen' : z,
+    'Nifti' : s
+}
 
+imagenes_obj = Imagenes()
+key="123"
 
+ruta = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\Sarcoma\img1"
+A = D.Imagen(ruta)
+img=A[0].pixel_array
+print(img)
+imagenes_obj.leer_imagen(key, A)
+img=imagenes_obj.obtener_imagen(key)
+N = D.Nombre(0)
+print('Nombre: {}' .format(N))
+E = D.Age(0)
+print('Edad: {}' .format(E))
+p = D.Estudio(0)
+print('Estudio: {}' .format(p))
+k = D.Sex(0)
+print('Genero: {}' .format(k))
+
+for i in range (len(A)):
+    img=imagenes_obj.obtener_imagen(key,i)
+    plt.imshow(img)
+    plt.axis('off')
+    plt.show()
+#for i in range (len(A)):
+    #img=D.retornar_imagen(i)
+    #plt.imshow(img)
+    #plt.axis('off')
+    #plt.show()
 
 
