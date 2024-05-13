@@ -3,8 +3,8 @@ import pydicom
 import matplotlib.pyplot as plt
 import os
 import dicom2nifti
-import nilearn
-from nilearn import plotting
+#import nilearn
+#from nilearn import plotting
      
 class Dicom():
     def Imagen(self, path):
@@ -34,9 +34,13 @@ class Dicom():
     def Estudio(self, Lista,i):
         Estudio = Lista[i].StudyDescription
         return Estudio
+    def retornar_imagen(self,lista,i):
+        img = lista[i]
+        return img
+
     
 D = Dicom()
-ruta = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\Sarcoma\img1"
+ruta = r"C:\Users\dario\Parcial-3\Sarcoma\img1"
 A = D.Imagen(ruta)
 N = D.Nombre(A,0)
 print('Nombre: {}' .format(N))
@@ -46,5 +50,10 @@ p = D.Estudio(A,0)
 print('Estudio: {}' .format(p))
 k = D.Sex(A,0)
 print('Genero: {}' .format(k))
+z=A[0]
+img=z.pixel_array
+plt.imshow(img)
+plt.axis('off')
+plt.show()
 
 
