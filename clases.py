@@ -78,7 +78,7 @@ class Imagenes:
             print("No se encontró la imagen especificada en el diccionario.")
             return None
 
-    def rotar_imagen(self, key, angulo):
+    def rotar_imagen(self, key=None, angulo="1"):
         if key in self.imagenesorg:
             imn=self.imagenesorg[key]
             if angulo == "1":

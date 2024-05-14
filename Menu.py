@@ -6,9 +6,7 @@ import cv2
 D = Paciente()
 P = 0
 img=Imagenes()
-D = Paciente()
-P = 0
-img=Imagenes()
+
 while True:
     paciente = {}
     dicom = {}
@@ -52,7 +50,7 @@ while True:
                      2. 180 grados
                      3. 270 grados
                      """)
-        rotada=Imagenes.rotar_imagen(key,angulo)
+        rotada=Imagenes.rotar_imagen(key=key,angulo=angulo)
         orginal=Imagenes.obtener_imagen(key)
         fig, axs = plt.subplots(1, 2, figsize=(10, 5))
         axs[0].imshow(orginal, cmap="bone")
