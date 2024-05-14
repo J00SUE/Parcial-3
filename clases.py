@@ -12,11 +12,11 @@ class Paciente():
     def __init__(self):
         self.dicomlist= {}
 
-    def Imagen(self, path):
+    def Imagen(self, path,key):
         for archivo in os.listdir(path):
             if archivo.endswith('.dcm'):
-                self.dicomlist.append(pydicom.dcmread(os.path.join(path, archivo)))
-                self.dicomlist.sort(key = lambda x: int(x.ImagePositionPatient[2]))
+                j=pydicom.dcmread(os.path.join(path, archivo))
+                self.dicomlist[key]=j
         return self.dicomlist
 
     def Nombre(self,i):
@@ -73,18 +73,17 @@ class Imagenes:
             print("No se pudo leer la imagen desde la ruta especificada.")
     def obtener_imagen(self, key):
         if key in self.imagenesorg:
-            return self.imagenesorg[key]
+            return self.imagenesorg[key][0]
         else:
             print("No se encontró la imagen especificada en el diccionario.")
             return None
 
     def rotar_imagen(self, key=None, angulo="1"):
         if key in self.imagenesorg:
-            imn=self.imagenesorg[key]
+            imn=self.imagenesorg[key][0]
             if angulo == "1":
                 imagen_rotada = cv2.rotate(imn, cv2.ROTATE_90_CLOCKWISE)
             elif angulo == "2":
-                
                 imagen_rotada = cv2.rotate(imn, cv2.ROTATE_180)
             elif angulo == "3":
                 imagen_rotada = cv2.rotate(imn, cv2.ROTATE_90_COUNTERCLOCKWISE)
@@ -101,15 +100,17 @@ class Imagenes:
 
     def binarizar_imagen(self, key, umbral=None ,  tamano_kernel=None):
         if tamano_kernel is not None:
-            self.tamano_kernel = tamano_kernel
+            self.tamano_kernel = int(tamano_kernel)
         if umbral is not None:
             self.umbral = umbral
 
         if key in self.imagenesorg:
-            imn=self.imagenesorg[key]
-            _, imagen_binarizada = cv2.threshold(imn, self.umbral, 255, cv2.THRESH_BINARY)
+            imn=self.imagenesorg[key][0]
+            imagen_gris = cv2.cvtColor(imn, cv2.COLOR_BGR2GRAY)
+            imagen_binarizada = cv2.threshold(imagen_gris, self.umbral, 255, cv2.THRESH_BINARY)
             kernel = np.ones((self.tamano_kernel, self.tamano_kernel), np.uint8)
-            imagen_morfologica = cv2.morphologyEx(imagen_binarizada, cv2.MORPH_OPEN, kernel)
+
+            imagen_morfologica = cv2.morphologyEx(imagen_binarizada[1], cv2.MORPH_OPEN, kernel)
             info = f"Imagen binarizada (Umbral: {self.umbral},  kernel: {self.tamano_kernel})"
             cv2.putText(imagen_morfologica, info, (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
             self.imagenesbin[key] = imagen_morfologica
