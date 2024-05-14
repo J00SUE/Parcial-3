@@ -43,17 +43,17 @@ while True:
         PNG[key] = {'Imagen': A}
         
     elif Menu == "c":
-        key=input("ingrese la clave del paciente")
+        #ruta=input("ingrese la ruta de la imagen")
+        #key=input("ingrese la clave del paciente")
+        ruta=r"C:\Users\dario\Parcial-3-4\Menu.py"
+        key="123"
         angulo=input("""ingrese el angulo al que quiere rotar
                      1. 90 grados
                      2. 180 grados
                      3. 270 grados
                      """)
-        infopac=D.Imagen(ruta)
-        print(f"su paciente tiene {len()} cortes")
-        corte=int(input("ingrese el corte que quiere rotar"))
-        rotada=Imagenes.rotar_imagen(key,angulo,corte)
-        orginal=infopac[corte].pixelarray
+        rotada=Imagenes.rotar_imagen(key,angulo)
+        orginal=Imagenes.obtener_imagen(key)
         fig, axs = plt.subplots(1, 2, figsize=(10, 5))
         axs[0].imshow(orginal, cmap="bone")
         axs[0].set_title('Imagen Original')
