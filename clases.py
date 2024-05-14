@@ -10,7 +10,7 @@ from nilearn import plotting
      
 class Paciente():
     def __init__(self):
-        self.dicomlist= []
+        self.dicomlist= {}
 
     def Imagen(self, path):
         for archivo in os.listdir(path):

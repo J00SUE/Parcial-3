@@ -2,6 +2,7 @@ from clases import Paciente
 from clases import Imagenes
 import matplotlib.pyplot as plt
 import cv2
+<<<<<<< HEAD
 
 D = Paciente()
 P = 0
@@ -11,6 +12,13 @@ while True:
     paciente = {}
     dicom = {}
     PNG = {}
+=======
+D = Paciente()
+P = 0
+img=Imagenes()
+while True:
+    paciente = {}
+>>>>>>> fa7dde5f5fc721e95545aabce2cc7bc0ac840885
     rutan = r"C:\Users\dario\Desktop\p3\Parcial-3\Sarcoma\img2"
     Menu = input("""
             a. Ingresar paciente
