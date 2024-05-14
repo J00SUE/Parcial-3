@@ -60,27 +60,27 @@ class Imagenes:
         self.umbral = 128  
         self.tamano_kernel = 3
 
-    def leer_imagen(self, key, iman):
+    def leer_imagen(self, key, ruta):
         imn=[]
-        for i in range (len(iman)):
-            imagen = iman[i].pixel_array
-            imagen_s = cv2.convertScaleAbs(imagen)
-            imn.append(imagen_s)
+
+        imagen = cv2.imread(ruta)
+        img = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
+        imn.append(img)
         if imn is not None:
             self.imagenesorg[key] = imn
             print("Imagen leída correctamente.")
         else:
             print("No se pudo leer la imagen desde la ruta especificada.")
-    def obtener_imagen(self, key,i):
+    def obtener_imagen(self, key):
         if key in self.imagenesorg:
-            return self.imagenesorg[key][i]
+            return self.imagenesorg[key]
         else:
             print("No se encontró la imagen especificada en el diccionario.")
             return None
 
-    def rotar_imagen(self, key, angulo,i):
+    def rotar_imagen(self, key, angulo):
         if key in self.imagenesorg:
-            imn=self.imagenesorg[key][i]
+            imn=self.imagenesorg[key]
             if angulo == "1":
                 imagen_rotada = cv2.rotate(imn, cv2.ROTATE_90_CLOCKWISE)
             elif angulo == "2":
@@ -99,14 +99,14 @@ class Imagenes:
             print("No se encontró la imagen especificada en el diccionario.")
             return None
 
-    def binarizar_imagen(self, key,i, umbral=None ,  tamano_kernel=None):
+    def binarizar_imagen(self, key, umbral=None ,  tamano_kernel=None):
         if tamano_kernel is not None:
             self.tamano_kernel = tamano_kernel
         if umbral is not None:
             self.umbral = umbral
 
         if key in self.imagenesorg:
-            imn=self.imagenesorg[key][i]
+            imn=self.imagenesorg[key]
             _, imagen_binarizada = cv2.threshold(imn, self.umbral, 255, cv2.THRESH_BINARY)
             kernel = np.ones((self.tamano_kernel, self.tamano_kernel), np.uint8)
             imagen_morfologica = cv2.morphologyEx(imagen_binarizada, cv2.MORPH_OPEN, kernel)
