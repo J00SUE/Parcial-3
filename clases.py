@@ -81,12 +81,12 @@ class Imagenes:
     def rotar_imagen(self, key, angulo,i):
         if key in self.imagenesorg:
             imn=self.imagenesorg[key][i]
-            if angulo == 1:
+            if angulo == "1":
                 imagen_rotada = cv2.rotate(imn, cv2.ROTATE_90_CLOCKWISE)
-            elif angulo == 2:
+            elif angulo == "2":
                 
                 imagen_rotada = cv2.rotate(imn, cv2.ROTATE_180)
-            elif angulo == 3:
+            elif angulo == "3":
                 imagen_rotada = cv2.rotate(imn, cv2.ROTATE_90_COUNTERCLOCKWISE)
             else:
                 print("El ángulo especificado no es válido.")
@@ -119,84 +119,84 @@ class Imagenes:
         else:
             print("No se encontró la imagen especificada en el diccionario.")
     
-D = Paciente()
-P = 0
+#D = Paciente()
+#P = 0
 
-ruta = input("Ruta de Dicom: ")
-A = D.Imagen(ruta)
-P = 0
-N = D.Nombre(P)
-print('Nombre: {}' .format(N))
-I = D.Id(P)
-print('Id: {}' .format(I))
-E = D.Age(P)
-print('Edad: {}' .format(E))
-p = D.Estudio(P)
-print('Estudio: {}' .format(p))
-k = D.Sex(P)
-print('Genero: {}' .format(k))
-z = D.retornar_imagen(P)
-rutan = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\nifti"
-s = D.Nifti(ruta,rutan)
+#ruta = input("Ruta de Dicom: ")
+#A = D.Imagen(ruta)
+#P = 0
+#N = D.Nombre(P)
+#print('Nombre: {}' .format(N))
+#I = D.Id(P)
+#print('Id: {}' .format(I))
+#E = D.Age(P)
+#print('Edad: {}' .format(E))
+#p = D.Estudio(P)
+#print('Estudio: {}' .format(p))
+#k = D.Sex(P)
+#print('Genero: {}' .format(k))
+#z = D.retornar_imagen(P)
+#rutan = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\nifti"
+#s = D.Nifti(ruta,rutan)
 
-paciente = {}
-paciente[I] = {
-    'Nombre': N,
-    'Edad': E,
-    'Estudio': p,
-    'Genero': k,
-    'Imagen' : z,
-    'Nifti' : s
-}
+#paciente = {}
+#paciente[I] = {
+    #'Nombre': N,
+  #  'Edad': E,
+   # 'Estudio': p,
+   # 'Genero': k,
+  #  'Imagen' : z,
+ #   'Nifti' : s
+#}
 
-ruta = input("Ruta de Dicom: ")
-A = D.Imagen(ruta)
-P = 0
-N = D.Nombre(P)
-print('Nombre: {}' .format(N))
-I = D.Id(P)
-print('Id: {}' .format(I))
-E = D.Age(P)
-print('Edad: {}' .format(E))
-p = D.Estudio(P)
-print('Estudio: {}' .format(p))
-k = D.Sex(P)
-print('Genero: {}' .format(k))
-z = D.retornar_imagen(P)
-rutan = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\nifti"
-s = D.Nifti(ruta,rutan)
+#ruta = input("Ruta de Dicom: ")
+#A = D.Imagen(ruta)
+#P = 0
+#N = D.Nombre(P)
+#print('Nombre: {}' .format(N))
+#I = D.Id(P)
+#print('Id: {}' .format(I))
+#E = D.Age(P)
+#print('Edad: {}' .format(E))
+#p = D.Estudio(P)
+#print('Estudio: {}' .format(p))
+#k = D.Sex(P)
+#print('Genero: {}' .format(k))
+#z = D.retornar_imagen(P)
+#rutan = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\nifti"
+#s = D.Nifti(ruta,rutan)
 
-paciente = {}
-paciente[I] = {
-    'Nombre': N,
-    'Edad': E,
-    'Estudio': p,
-    'Genero': k,
-    'Imagen' : z,
-    'Nifti' : s
-}
+#paciente = {}
+#paciente[I] = {
+    #'Nombre': N,
+   # 'Edad': E,
+   # 'Estudio': p,
+   # 'Genero': k,
+   # 'Imagen' : z,
+   # 'Nifti' : s
+#}
 
-imagenes_obj = Imagenes()
-key="123"
+#imagenes_obj = Imagenes()
+#key="123"
 
-ruta = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\Sarcoma\img1"
-A = D.Imagen(ruta)
-img=A[0].pixel_array
-print(img)
-imagenes_obj.leer_imagen(key, A)
-img=imagenes_obj.obtener_imagen(key,0)
-N = D.Nombre(0)
-print('Nombre: {}' .format(N))
-E = D.Age(0)
-print('Edad: {}' .format(E))
-p = D.Estudio(0)
-print('Estudio: {}' .format(p))
-k = D.Sex(0)
-print('Genero: {}' .format(k))
+#r#uta = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\Sarcoma\img1"
+#A = D.Imagen(ruta)
+#img=A[0].pixel_array
+#print(img)
+#imagenes_obj.leer_imagen(key, A)
+#img=imagenes_obj.obtener_imagen(key,0)
+#N = D.Nombre(0)
+#print('Nombre: {}' .format(N))
+#E = D.Age(0)
+#print('Edad: {}' .format(E))
+#p = D.Estudio(0)
+#print('Estudio: {}' .format(p))
+#k = D.Sex(0)
+#print('Genero: {}' .format(k))
 
-for i in range (len(A)):
-    img=imagenes_obj.binarizar_imagen(key,3,i)
-    plt.imshow(img, cmap="bone")
-    plt.axis('off')
-    plt.show()
+#for i in range (len(A)):
+    #img=imagenes_obj.binarizar_imagen(key,3,i)
+    #plt.imshow(img, cmap="bone")
+    #plt.axis('off')
+    #plt.show()
 
