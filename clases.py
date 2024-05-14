@@ -12,11 +12,11 @@ class Paciente():
     def __init__(self):
         self.dicomlist= {}
 
-    def Imagen(self, path):
+    def Imagen(self, path, key):
         for archivo in os.listdir(path):
             if archivo.endswith('.dcm'):
-                self.dicomlist.append(pydicom.dcmread(os.path.join(path, archivo)))
-                self.dicomlist.sort(key = lambda x: int(x.ImagePositionPatient[2]))
+                j=pydicom.dcmread(os.path.join(path, archivo))
+                self.dicomlist[key]=j
         return self.dicomlist
 
     def Nombre(self,i):
@@ -51,6 +51,7 @@ class Paciente():
         img = nilearn.image.load_img(rut)
         plotting.plot_anat(img)
         plt.show()
+        return img
     
 class Imagenes:
     def __init__(self):
@@ -60,31 +61,30 @@ class Imagenes:
         self.umbral = 128  
         self.tamano_kernel = 3
 
-    def leer_imagen(self, key, iman):
+    def leer_imagen(self, key, ruta):
         imn=[]
-        for i in range (len(iman)):
-            imagen = iman[i].pixel_array
-            imagen_s = cv2.convertScaleAbs(imagen)
-            imn.append(imagen_s)
+
+        imagen = cv2.imread(ruta)
+        img = cv2.cvtColor(imagen, cv2.COLOR_BGR2RGB)
+        imn.append(img)
         if imn is not None:
             self.imagenesorg[key] = imn
             print("Imagen leída correctamente.")
         else:
             print("No se pudo leer la imagen desde la ruta especificada.")
-    def obtener_imagen(self, key,i):
+    def obtener_imagen(self, key):
         if key in self.imagenesorg:
-            return self.imagenesorg[key][i]
+            return self.imagenesorg[key][0]
         else:
             print("No se encontró la imagen especificada en el diccionario.")
             return None
 
-    def rotar_imagen(self, key, angulo,i):
+    def rotar_imagen(self, key=None, angulo="1"):
         if key in self.imagenesorg:
-            imn=self.imagenesorg[key][i]
+            imn=self.imagenesorg[key][0]
             if angulo == "1":
                 imagen_rotada = cv2.rotate(imn, cv2.ROTATE_90_CLOCKWISE)
             elif angulo == "2":
-                
                 imagen_rotada = cv2.rotate(imn, cv2.ROTATE_180)
             elif angulo == "3":
                 imagen_rotada = cv2.rotate(imn, cv2.ROTATE_90_COUNTERCLOCKWISE)
@@ -99,17 +99,19 @@ class Imagenes:
             print("No se encontró la imagen especificada en el diccionario.")
             return None
 
-    def binarizar_imagen(self, key,i, umbral=None ,  tamano_kernel=None):
+    def binarizar_imagen(self, key, umbral=None ,  tamano_kernel=None):
         if tamano_kernel is not None:
-            self.tamano_kernel = tamano_kernel
+            self.tamano_kernel = int(tamano_kernel)
         if umbral is not None:
             self.umbral = umbral
 
         if key in self.imagenesorg:
-            imn=self.imagenesorg[key][i]
-            _, imagen_binarizada = cv2.threshold(imn, self.umbral, 255, cv2.THRESH_BINARY)
+            imn=self.imagenesorg[key][0]
+            imagen_gris = cv2.cvtColor(imn, cv2.COLOR_BGR2GRAY)
+            imagen_binarizada = cv2.threshold(imagen_gris, self.umbral, 255, cv2.THRESH_BINARY)
             kernel = np.ones((self.tamano_kernel, self.tamano_kernel), np.uint8)
-            imagen_morfologica = cv2.morphologyEx(imagen_binarizada, cv2.MORPH_OPEN, kernel)
+
+            imagen_morfologica = cv2.morphologyEx(imagen_binarizada[1], cv2.MORPH_OPEN, kernel)
             info = f"Imagen binarizada (Umbral: {self.umbral},  kernel: {self.tamano_kernel})"
             cv2.putText(imagen_morfologica, info, (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
             self.imagenesbin[key] = imagen_morfologica
@@ -119,84 +121,5 @@ class Imagenes:
         else:
             print("No se encontró la imagen especificada en el diccionario.")
     
-#D = Paciente()
-#P = 0
 
-#ruta = input("Ruta de Dicom: ")
-#A = D.Imagen(ruta)
-#P = 0
-#N = D.Nombre(P)
-#print('Nombre: {}' .format(N))
-#I = D.Id(P)
-#print('Id: {}' .format(I))
-#E = D.Age(P)
-#print('Edad: {}' .format(E))
-#p = D.Estudio(P)
-#print('Estudio: {}' .format(p))
-#k = D.Sex(P)
-#print('Genero: {}' .format(k))
-#z = D.retornar_imagen(P)
-#rutan = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\nifti"
-#s = D.Nifti(ruta,rutan)
-
-#paciente = {}
-#paciente[I] = {
-    #'Nombre': N,
-  #  'Edad': E,
-   # 'Estudio': p,
-   # 'Genero': k,
-  #  'Imagen' : z,
- #   'Nifti' : s
-#}
-
-#ruta = input("Ruta de Dicom: ")
-#A = D.Imagen(ruta)
-#P = 0
-#N = D.Nombre(P)
-#print('Nombre: {}' .format(N))
-#I = D.Id(P)
-#print('Id: {}' .format(I))
-#E = D.Age(P)
-#print('Edad: {}' .format(E))
-#p = D.Estudio(P)
-#print('Estudio: {}' .format(p))
-#k = D.Sex(P)
-#print('Genero: {}' .format(k))
-#z = D.retornar_imagen(P)
-#rutan = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\nifti"
-#s = D.Nifti(ruta,rutan)
-
-#paciente = {}
-#paciente[I] = {
-    #'Nombre': N,
-   # 'Edad': E,
-   # 'Estudio': p,
-   # 'Genero': k,
-   # 'Imagen' : z,
-   # 'Nifti' : s
-#}
-
-#imagenes_obj = Imagenes()
-#key="123"
-
-#r#uta = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\Sarcoma\img1"
-#A = D.Imagen(ruta)
-#img=A[0].pixel_array
-#print(img)
-#imagenes_obj.leer_imagen(key, A)
-#img=imagenes_obj.obtener_imagen(key,0)
-#N = D.Nombre(0)
-#print('Nombre: {}' .format(N))
-#E = D.Age(0)
-#print('Edad: {}' .format(E))
-#p = D.Estudio(0)
-#print('Estudio: {}' .format(p))
-#k = D.Sex(0)
-#print('Genero: {}' .format(k))
-
-#for i in range (len(A)):
-    #img=imagenes_obj.binarizar_imagen(key,3,i)
-    #plt.imshow(img, cmap="bone")
-    #plt.axis('off')
-    #plt.show()
 
