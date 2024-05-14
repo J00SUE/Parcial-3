@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import cv2
 
 D = Paciente()
-P = 0
 img=Imagenes()
 paciente = {}
 dicom = {}
