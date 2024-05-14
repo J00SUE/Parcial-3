@@ -4,17 +4,15 @@ import matplotlib.pyplot as plt
 import cv2
 
 D = Paciente()
-P = 0
 img=Imagenes()
-D = Paciente()
-P = 0
-img=Imagenes()
+
 while True:
     paciente = {}
     dicom = {}
     PNG = {}
     
-    rutan = r"C:\Users\dario\Desktop\p3\Parcial-3\Sarcoma\img2"
+    rutan = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\nifti"
+    #rutan = r"C:\Users\dario\Desktop\p3\Parcial-3\nifti"
     Menu = input("""
             a. Ingresar paciente
             b. Ingreso imagenes
@@ -25,7 +23,8 @@ while True:
     
     if Menu == "a":
         ruta = input("Ruta de Dicom: ")
-        A = D.Imagen(ruta)
+        P = input("Ingresa la Key: ")
+        A = D.Imagen(ruta,P)
         N = D.Nombre(P)
         I = D.Id(P)
         E = D.Age(P)
