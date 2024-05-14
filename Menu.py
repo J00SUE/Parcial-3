@@ -1,11 +1,13 @@
-from Parcial 3 import Paciente
-from Parcial 3 import Imagenes
+from clases import Paciente
+from clases import Imagenes
+import matplotlib.pyplot as plt
+import cv2
 D = Paciente()
 P = 0
-
+img=Imagenes()
 while True:
     paciente = {}
-    rutan = r"C:\Users\Chimuelo\OneDrive\Escritorio\Parcial 3\nifti"
+    rutan = r"C:\Users\dario\Desktop\p3\Parcial-3\Sarcoma\img2"
     Menu = input("""
             a. Ingresar paciente
             b. Ingreso imagenes
@@ -25,19 +27,32 @@ while True:
         z = D.retornar_imagen(P)
         s = D.Nifti(ruta,rutan)
 
-        paciente[I] = {
-            'Nombre': N,
-            'Edad': E,
-            'Estudio': p,
-            'Genero': k,
-            'Imagen' : z,
-            'Nifti' : s
-        }
+        paciente[I] = {'Nombre': N,'Edad': E,'Estudio': p,'Genero': k,'Imagen' : z,'Nifti' : s}
 
     elif Menu == "b":
         pass
     elif Menu == "c":
-        pass
+        key=input("ingrese la clave del paciente")
+        angulo=input("""ingrese el angulo al que quiere rotar
+                     1. 90 grados
+                     2. 180 grados
+                     3. 270 grados
+                     """)
+        infopac=D.Imagen(ruta)
+        print(f"su paciente tiene {len()} cortes")
+        corte=int(input("ingrese el corte que quiere rotar"))
+        rotada=Imagenes.rotar_imagen(key,angulo,corte)
+        orginal=infopac[corte].pixelarray
+        fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+        axs[0].imshow(orginal, cmap="bone")
+        axs[0].set_title('Imagen Original')
+        axs[0].axis('off')
+        axs[1].imshow(rotada, cmap='bone')
+        axs[1].set_title('Imagen Rotada')
+        axs[1].axis('off')
+        plt.tight_layout()
+        plt.show()
+
     elif Menu == "d":
         pass
     elif Menu == "e":
